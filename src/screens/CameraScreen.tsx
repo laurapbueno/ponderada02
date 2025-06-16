@@ -12,12 +12,8 @@ import {
 } from 'react-native';
 
 import * as Sharing from 'expo-sharing';
-import {
-  CameraView,
-  useCameraPermissions,
-  CameraCapturedPicture,
-} from 'expo-camera';
-
+import { Camera, CameraCapturedPicture, useCameraPermissions } from 'expo-camera';
+import { CameraType } from 'expo-camera/build/Camera.types';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Produto = {
@@ -29,7 +25,7 @@ type Produto = {
 };
 
 export default function CameraScreen() {
-  const cameraRef = useRef<CameraView | null>(null);
+  const cameraRef = useRef<Camera>(null);
   const [permission, requestPermission] = useCameraPermissions();
   const [fotoUri, setFotoUri] = useState<string | null>(null);
   const [nome, setNome] = useState('');
@@ -37,7 +33,9 @@ export default function CameraScreen() {
   const [descricao, setDescricao] = useState('');
 
   useEffect(() => {
-    if (!permission) requestPermission();
+    if (!permission) {
+      requestPermission();
+    }
   }, [permission]);
 
   const tirarFoto = async () => {
@@ -111,10 +109,10 @@ export default function CameraScreen() {
     <View style={styles.container}>
       {!fotoUri ? (
         <>
-          <CameraView
+          <Camera
             ref={cameraRef}
             style={styles.camera}
-            facing="back"
+            type={CameraType.back}
           />
           <View style={styles.controls}>
             <TouchableOpacity onPress={tirarFoto} style={styles.botao}>
